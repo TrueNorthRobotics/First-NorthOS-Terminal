@@ -1,0 +1,45 @@
+import os
+import sys
+import subprocess
+
+def print_northos_banner():
+    print(" ____  _   _   ____   ____  ")
+    print("|  _ \\| | | | / ___| |  _ \\ ")
+    print("| |_) | | | | \\___ \\ | |_) |")
+    print("|  __/| |_| |  ___) ||  __/ ")
+    print("|_|    \\___/  |____/ |_|    ")
+    print("Welcome to NorthOS")
+    print("------------------")
+
+def execute_command(command):
+    try:
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        if stdout:
+            print(stdout, end='')
+        if stderr:
+            print(f"Error: {stderr}", end='')
+    except FileNotFoundError:
+        print(f"Command not found: {command}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def main():
+    print_northos_banner()
+    while True:
+        prompt = f"NorthOS:{os.getcwd()}$ "
+        command = input(prompt).strip()
+
+        if not command:
+            continue
+        elif command == "exit":
+            print("Exiting NorthOS.")
+            break
+        elif command == "clear":
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print_northos_banner()
+        else:
+            execute_command(command)
+
+if __name__ == "__main__":
+    main()
