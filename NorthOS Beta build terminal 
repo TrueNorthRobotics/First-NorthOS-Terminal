@@ -1,0 +1,130 @@
+import time
+import sys
+import os
+
+AMBER = '\033[38;5;214m'  # ANSI escape code for amber color
+GREY_BG = '\033[48;5;238m' # ANSI escape code for grey background
+RESET = '\033[0m'        # ANSI escape code to reset formatting
+
+def clear_screen():
+    """Clears the terminal screen."""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def type_effect(text, delay=0.03):
+    """Prints text with a typing effect in amber color on a grey background."""
+    formatted_text = f"{AMBER}{GREY_BG}{text}{RESET}"
+    for char in formatted_text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+def simulate_boot(boot_option="default"):
+    """Simulates a boot sequence without random errors."""
+    clear_screen()
+    operating_system = "NorthOS"
+    version = "Alpha v0.1"
+    print()
+    type_effect(f"Booting {operating_system} {version}...", 0.04)
+    type_effect(f"Selected Boot Option: {boot_option.capitalize()}", 0.04)
+    time.sleep(1)
+    print()
+
+    phases = [
+        "Initializing hardware...",
+        "Scanning for devices...",
+        "Loading kernel...",
+        "Mounting file system...",
+        "Starting services..."
+    ]
+
+    for phase in phases:
+        type_effect(phase, 0.05)
+        time.sleep(0.75)
+
+    print()
+    type_effect("Boot process finished.", 0.04)
+    time.sleep(0.5)
+
+def login():
+    """Simulates a login prompt."""
+    print()
+    type_effect("NorthOS Login:", 0.06)
+    username = input(f"{AMBER}{GREY_BG}Username: {RESET}")
+    password = input(f"{AMBER}{GREY_BG}Password: {RESET}")  # Still a simulation!
+
+    if username == "Tristan" and password == "NorthOS":
+        type_effect("Login successful.", 0.04)
+        return True
+    else:
+        type_effect("Login failed. Incorrect username or password.", 0.04)
+        return False
+
+def terminal():
+    """Simulates a basic terminal with more commands."""
+    print(f"\n{AMBER}{GREY_BG}Welcome to the NorthOS Terminal.{RESET}")
+    while True:
+        command_line = input(f"{AMBER}{GREY_BG}NorthOS> {RESET}")
+        parts = command_line.split()
+        if not parts:
+            continue
+        command = parts[0].lower()
+        arguments = parts[1:]
+
+        if command == "exit":
+            break
+        elif command == "help":
+            type_effect("Available commands: help, clear, echo, date, version", 0.03)
+        elif command == "clear":
+            clear_screen()
+            print(f"{AMBER}{GREY_BG}Welcome to the NorthOS Terminal.{RESET}")
+        elif command == "echo":
+            type_effect(" ".join(arguments), 0.03)
+        elif command == "date":
+            import datetime
+            now = datetime.datetime.now()
+            type_effect(now.strftime("%Y-%m-%d %H:%M:%S"), 0.03)
+        elif command == "version":
+            type_effect("NorthOS Alpha v0.1", 0.03)
+        else:
+            type_effect(f"Command '{command}' not recognized. Type 'help' for available commands.", 0.03)
+
+def boot_menu():
+    """Displays the boot menu and handles user selection with amber text on grey background."""
+    clear_screen()
+    type_effect("NorthOS Boot Options:", 0.04)
+    type_effect("1. Default Boot", 0.04)
+    type_effect("2. Safe Mode", 0.04)
+    type_effect("3. Recovery Mode", 0.04)
+    type_effect("4. Diagnostics", 0.04)
+    type_effect("5. Exit", 0.04)
+    print()
+
+    while True:
+        choice = input(f"{AMBER}{GREY_BG}Enter your choice (1-5): {RESET}")
+        if choice == '1':
+            simulate_boot("default")
+            break
+        elif choice == '2':
+            simulate_boot("safe mode")
+            break
+        elif choice == '3':
+            simulate_boot("recovery mode")
+            break
+        elif choice == '4':
+            simulate_boot("diagnostics")
+            break
+        elif choice == '5':
+            type_effect("Exiting...", 0.04)
+            sys.exit()
+        else:
+            type_effect("Invalid choice. Please enter a number between 1 and 5.", 0.03)
+            time.sleep(0.5)
+            boot_menu() # Re-display the menu
+
+if __name__ == "__main__":
+    boot_menu()
+    if login():
+        terminal()
+    else:
+        type_effect("System halted.", 0.04)
