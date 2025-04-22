@@ -1,6 +1,9 @@
 import os
 import sys
 import subprocess
+import getpass
+import random
+import datetime
 
 def print_northos_banner():
     print(" ____  _   _   ____   ____  ")
@@ -10,6 +13,17 @@ def print_northos_banner():
     print("|_|    \\___/  |____/ |_|    ")
     print("Welcome to NorthOS")
     print("------------------")
+
+def authenticate():
+    username = input("Username: ")
+    password = getpass.getpass("Password: ")
+
+    if username == "True North Robotics" and password == "This is a demo":
+        print("Login successful!")
+        return True
+    else:
+        print("Login failed. Incorrect username or password.")
+        return False
 
 def execute_command(command):
     try:
@@ -24,8 +38,188 @@ def execute_command(command):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def northos_command(command):
+    if command == "northos_info":
+        print("NorthOS Version 0.1 - Simple Terminal Simulation")
+    elif command == "northos_date":
+        now = datetime.datetime.now()
+        print(f"Current date and time: {now.strftime('%Y-%m-%d %H:%M:%S')}")
+    elif command == "northos_fortune":
+        fortunes = [
+            "The early bird gets the worm.",
+            "Look before you leap.",
+            "A penny saved is a penny earned.",
+            "All that glitters is not gold.",
+            "Where there's a will, there's a way.",
+            "Every cloud has a silver lining.",
+            "Great things are done by a series of small things brought together.",
+            "The only way to do great work is to love what you do.",
+            "Strive not to be a success, but rather to be of value.",
+            "The mind is everything. What you think you become."
+        ]
+        print(random.choice(fortunes))
+    elif command.startswith("northos_greet "):
+        name = command.split(" ")[1]
+        print(f"Hello, {name}!")
+    elif command == "northos_version":
+        print("NorthOS Build 20250422")
+    elif command == "northos_hostname":
+        print("northos-desktop")
+    elif command == "northos_users":
+        print("Guest User")
+    elif command == "northos_uptime":
+        print("Uptime: 0 days, 0 hours, 12 minutes")
+    elif command.startswith("northos_echo "):
+        text = command.split(" ", 1)[1]
+        print(text)
+    elif command == "northos_random_number":
+        print(random.randint(1, 100))
+    elif command == "northos_random_color":
+        colors = ["red", "blue", "green", "yellow", "purple", "orange", "pink", "cyan", "magenta"]
+        print(random.choice(colors))
+    elif command.startswith("northos_calculate "):
+        try:
+            expression = command.split(" ", 1)[1]
+            result = eval(expression)  # Be cautious with eval in real applications
+            print(f"Result: {result}")
+        except Exception as e:
+            print(f"Error in calculation: {e}")
+    elif command.startswith("northos_countdown "):
+        try:
+            count = int(command.split(" ")[1])
+            for i in range(count, -1, -1):
+                print(i)
+        except ValueError:
+            print("Invalid countdown number.")
+    elif command == "northos_coinflip":
+        if random.choice([True, False]):
+            print("Heads")
+        else:
+            print("Tails")
+    elif command == "northos_dice":
+        print(f"You rolled a {random.randint(1, 6)}")
+    elif command.startswith("northos_say "):
+        text = command.split(" ", 1)[1]
+        os.system(f'echo "{text}"') # This will use the system's echo command
+    elif command == "northos_list_files":
+        print("file1.txt")
+        print("document.pdf")
+        print("image.png")
+    elif command.startswith("northos_view_file "):
+        filename = command.split(" ")[1]
+        if filename == "file1.txt":
+            print("This is the content of file1.")
+        elif filename == "document.pdf":
+            print("(Simulated PDF content)")
+        elif filename == "image.png":
+            print("(Simulated image data)")
+        else:
+            print(f"File not found: {filename}")
+    elif command.startswith("northos_change_dir "):
+        dirname = command.split(" ")[1]
+        if dirname == "..":
+            current_dir = os.getcwd().split(os.sep)
+            if len(current_dir) > 1:
+                os.chdir(os.sep.join(current_dir[:-1]))
+        elif dirname:
+            os.chdir(os.path.join(os.getcwd(), dirname))
+        print(f"Changed directory to: {os.getcwd()}")
+    elif command.startswith("northos_timer "):
+        try:
+            seconds = int(command.split(" ")[1])
+            print(f"Starting timer for {seconds} seconds...")
+            import time
+            time.sleep(seconds)
+            print("Timer finished!")
+        except ValueError:
+            print("Invalid timer duration.")
+        except ImportError:
+            print("Timer functionality not available.")
+    elif command == "northos_inspire":
+        quotes = [
+            "The future belongs to those who believe in the beauty of their dreams.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "The only limit to our realization of tomorrow will be our doubts of today.",
+            "Believe you can and you're halfway there.",
+            "It does not matter how slowly you go as long as you do not stop."
+        ]
+        print(random.choice(quotes))
+    elif command == "northos_joke":
+        jokes = [
+            "Why don't scientists trust atoms? Because they make up everything!",
+            "Parallel lines have so much in common... it's a shame they'll never meet.",
+            "Why did the scarecrow win an award? Because he was outstanding in his field!",
+            "What do you call a lazy kangaroo? Pouch potato!",
+            "Why did the bicycle fall over? Because it was two tired!"
+        ]
+        print(random.choice(jokes))
+    elif command == "northos_poem":
+        poem = [
+            "A simple verse, in digital form,",
+            "A fleeting thought, to weather the storm.",
+            "NorthOS whispers, on the screen's soft glow,",
+            "A simulated world, where commands can flow."
+        ]
+        for line in poem:
+            print(line)
+    elif command.startswith("northos_magic8ball "):
+        responses = [
+            "It is certain.", "It is decidedly so.", "Without a doubt.", "Yes - definitely.",
+            "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.",
+            "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.",
+            "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.",
+            "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.",
+            "Very doubtful."
+        ]
+        question = command.split(" ", 1)[1]
+        print(f"You asked: {question}")
+        print(f"Magic 8-Ball says: {random.choice(responses)}")
+    elif command == "northos_fact":
+        facts = [
+            "The Eiffel Tower can be 15 cm taller during the summer due to thermal expansion.",
+            "Octopuses have three hearts.",
+            "Bananas are berries, but strawberries are not.",
+            "A group of flamingos is called a flamboyance.",
+            "Honey never spoils."
+        ]
+        print(random.choice(facts))
+    elif command == "help":
+        print("Available commands:")
+        print("  exit - Exit NorthOS")
+        print("  clear - Clear the screen")
+        print("  help - Show this help message")
+        print("  northos_info - Display NorthOS information")
+        print("  northos_date - Show the current date and time")
+        print("  northos_fortune - Display a random fortune")
+        print("  northos_greet <name> - Greet the specified name")
+        print("  northos_version - Display the NorthOS version")
+        print("  northos_hostname - Show the hostname")
+        print("  northos_users - List users")
+        print("  northos_uptime - Show system uptime")
+        print("  northos_echo <text> - Print the given text")
+        print("  northos_random_number - Generate a random number")
+        print("  northos_random_color - Display a random color")
+        print("  northos_calculate <expression> - Perform a calculation")
+        print("  northos_countdown <number> - Start a countdown")
+        print("  northos_coinflip - Simulate a coin flip")
+        print("  northos_dice - Simulate rolling a dice")
+        print("  northos_say <text> - Use system's echo to say text")
+        print("  northos_list_files - List simulated files")
+        print("  northos_view_file <filename> - View the content of a simulated file")
+        print("  northos_change_dir <directory> - Change the simulated current directory")
+        print("  northos_timer <seconds> - Start a timer")
+        print("  northos_inspire - Display an inspirational quote")
+        print("  northos_joke - Tell a joke")
+        print("  northos_poem - Display a short poem")
+        print("  northos_magic8ball <question> - Ask the Magic 8-Ball")
+        print("  northos_fact - Display a random fact")
+        # Add more commands to this help list as you implement them
+
 def main():
     print_northos_banner()
+    if not authenticate():
+        return
+
     while True:
         prompt = f"NorthOS:{os.getcwd()}$ "
         command = input(prompt).strip()
@@ -38,6 +232,10 @@ def main():
         elif command == "clear":
             os.system('cls' if os.name == 'nt' else 'clear')
             print_northos_banner()
+        elif command == "help":
+            northos_command("help") # Call the help logic within northos_command
+        elif command.startswith("northos_"):
+            northos_command(command)
         else:
             execute_command(command)
 
